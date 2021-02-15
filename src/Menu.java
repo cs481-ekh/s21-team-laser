@@ -1,7 +1,10 @@
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Menu {
 
@@ -14,7 +17,7 @@ public class Menu {
 	public Menu() {
 		menuBar = new JMenuBar(); 
 		
-		menu1 = new JMenu("Menu 1"); 
+		menu1 = new JMenu("File"); 
 		menu2 = new JMenu("Menu 2"); 
 		menu3 = new JMenu("Menu 3"); 
 
@@ -23,7 +26,7 @@ public class Menu {
 		menuBar.add(menu3);
 		
 		mItem1 = new JMenuItem("Create a tab");
-		mItem2 = new JMenuItem("Item 2");
+		mItem2 = new JMenuItem("Open");
 		mItem3 = new JMenuItem("Item 3");
 		mItem4 = new JMenuItem("Item 4");
 		mItem5 = new JMenuItem("Item 5");
@@ -39,6 +42,19 @@ public class Menu {
 		mItem1.addActionListener (new ActionListener() {
 			public void actionPerformed (ActionEvent e) {
 				createNewTab();
+			}
+		});
+		mItem2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Frame chooserFrame = new JFrame();
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				JFileChooser chooser = new JFileChooser();
+				chooser.setCurrentDirectory(workingDirectory);
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"JPG & GIF Images", "jpg", "gif");
+				chooser.setFileFilter(filter);
+				chooser.showOpenDialog(chooserFrame);  
+				File chosenFile = chooser.getSelectedFile();
 			}
 		});
 	}

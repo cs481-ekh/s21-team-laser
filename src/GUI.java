@@ -10,7 +10,7 @@ public class GUI {
 	static Menu menu; 
 	static Tab tab; 
 
-	private GUI() {
+	public GUI() {
 		frame = new JFrame("Laser Noise Analysis Application"); 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(FRAME_SIZE_WIDTH, FRAME_SIZE_HEIGHT); 
@@ -31,9 +31,9 @@ public class GUI {
 		frame.add(tab.retTabbedPane());
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new GUI(); 
-	}
+	}*/
 
 
 }
