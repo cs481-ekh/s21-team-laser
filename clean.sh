@@ -1,2 +1,7 @@
 #!/bin/bash
-exit 127
+func()
+{
+ local ex=$(rm src/*.class)
+}
+func
+exit $ex

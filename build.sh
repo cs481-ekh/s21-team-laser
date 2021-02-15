@@ -1,2 +1,7 @@
 #!/bin/bash
-exit 127
+func()
+{
+ local ex=$(javac src/*.java)
+}
+func
+exit $ex 
