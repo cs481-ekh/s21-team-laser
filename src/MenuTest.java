@@ -6,7 +6,9 @@ public class MenuTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+		//TODO: write test cases
+		//Note: lookup Robot Class for GUI test
+		//fail("Not yet implemented");
 	}
 
 }
