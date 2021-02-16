@@ -2,6 +2,8 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,7 +14,7 @@ public class Menu {
 	private JMenu menu1, menu2, menu3;
 	private JMenuItem mItem1, mItem2, mItem3, mItem4, mItem5, mItem6;  
 	private int tabCount = 0; 
- 
+	private File chosenFile;
 	
 	public Menu() {
 		menuBar = new JMenuBar(); 
@@ -50,11 +52,29 @@ public class Menu {
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				JFileChooser chooser = new JFileChooser();
 				chooser.setCurrentDirectory(workingDirectory);
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"JPG & GIF Images", "jpg", "gif");
-				chooser.setFileFilter(filter);
 				chooser.showOpenDialog(chooserFrame);  
 				File chosenFile = chooser.getSelectedFile();
+				File script = new File("src\\python_scripts\\analysis_SRTA_BSU.py");
+				System.out.println(script.getAbsolutePath() + "\n" + chosenFile.getAbsolutePath());
+			
+					ProcessBuilder pb = new ProcessBuilder("python", script.getAbsolutePath(), chosenFile.getAbsolutePath());
+					Process p;
+				try {
+					pb.redirectErrorStream(true); // merges err with out
+					pb.redirectOutput(Redirect.appendTo(new File("out.txt")));
+					p = pb.start();
+					p.waitFor();
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				catch(InterruptedException e1){
+					e1.printStackTrace();
+				}
+					
+					System.out.println("Process started");
+				
 			}
 		});
 	}
@@ -65,6 +85,15 @@ public class Menu {
 		GUI.tab.retTabbedPane().add("Tab " + tabCount, panel);
 	}
 	
+	public void setFile(File file){
+		chosenFile = file;
+	}
+
+	public File getFile()
+	{
+		return chosenFile;
+	}
+
 	public JMenuBar retMenu() {
 		return menuBar;
 	}
