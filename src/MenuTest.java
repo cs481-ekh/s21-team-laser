@@ -8,7 +8,7 @@ public class MenuTest {
 	public void test() {
 		//TODO: write test cases
 		//Note: lookup Robot Class for GUI test
-		//fail("Not yet implemented");
+		return;
 	}
 
 }
