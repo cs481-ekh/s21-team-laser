@@ -54,7 +54,7 @@ public class Menu {
 						"JPG & GIF Images", "jpg", "gif");
 				chooser.setFileFilter(filter);
 				chooser.showOpenDialog(chooserFrame);  
-				File chosenFile = chooser.getSelectedFile();
+				File chosenFle = chooser.getSelectedFile();
 			}
 		});
 	}
