@@ -8,6 +8,6 @@ jobs:
       - uses: actions/setup-java@v1
         with: 
           java-version: 1.8
-      - run: build.sh
-      - run: test.sh
-      - run: clean.sh
+      - run: sh ./build.sh
+      - run: sh ./test.sh
+      - run: sh ./clean.sh
