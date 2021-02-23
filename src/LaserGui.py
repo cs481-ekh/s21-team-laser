@@ -1,4 +1,4 @@
-import analysis
+import rawTAspectrum
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -21,6 +21,11 @@ class Project(tk.Frame):
         myMenu.add_cascade(label="Menu 1", menu=menu1)
         menu1.add_command(label="Select a file", command=self.OpenFile)
 
+        menu2 = tk.Menu(myMenu)
+        myMenu.add_cascade(label="Menu 2", menu=menu2)
+        menu2.add_command(label="Menu Item 3", command=emptyCommand)
+        menu2.add_command(label="Menu Item 4", command=emptyCommand)
+
 
     def createTab(self):
         # created new tabs
@@ -30,7 +35,9 @@ class Project(tk.Frame):
 
     def OpenFile(self):
         self.fileName = filedialog.askopenfilename(initialdir="/C:", title="Select a File", filetypes=(("DAT files", "*.dat"),("All files", "*.*")))
-        analysis.plot(self.fileName)
+        rawTAspectrum.plot(self.fileName)
+    def emptyCommand():
+        pass
 if __name__ == "__main__":
     root = tk.Tk()
     root.title('Laser Noise Analysis App')
