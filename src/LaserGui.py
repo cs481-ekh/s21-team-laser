@@ -61,6 +61,7 @@ class Project(tk.Frame):
         rawTAspectrum.load_data_file(self.fileName)
         fig = rawTAspectrum.load_chart()
         progressBar.stop()
+        progressBar.destroy()
         self.after(0,self.draw_plot)
     
     def draw_plot(self):
