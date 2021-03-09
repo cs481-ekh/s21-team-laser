@@ -8,6 +8,8 @@ from matplotlib.backends.backend_tkagg import (
 # Implement the default Matplotlib key bindings.
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
+from tkinter.filedialog import asksaveasfile
+
 import os
 
 class Project(tk.Frame):
@@ -27,6 +29,8 @@ class Project(tk.Frame):
         menu1 = tk.Menu(myMenu)
         myMenu.add_cascade(label="File", menu=menu1)
         menu1.add_command(label="Select a file", command=self.open_file)
+
+        menu1.add_command(label="Save a file", command=self.save_plot)
 
         menu2 = tk.Menu(myMenu)
         myMenu.add_cascade(label="Menu 2", menu=menu2)
@@ -61,6 +65,7 @@ class Project(tk.Frame):
         rawTAspectrum.load_data_file(self.fileName)
         fig = rawTAspectrum.load_chart()
         progressBar.stop()
+        progressBar.destroy()
         self.after(0,self.draw_plot)
     
     def draw_plot(self):
@@ -68,6 +73,15 @@ class Project(tk.Frame):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         canvas.draw()
         self.update()
+
+
+    def save_image(self):
+        files = [("All files", "*.*" ),
+                ("Python files", "*.py"),
+                ("Text document", "*.txt"),
+                ("Image files", "*.png")]
+        file = asksaveasfile(filetypes = files, defaultextension = '.png')
+
 if __name__ == "__main__":
     root = tk.Tk()
     root.title('Laser Noise Analysis App')
