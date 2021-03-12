@@ -30,7 +30,7 @@ class Project(tk.Frame):
         myMenu.add_cascade(label="File", menu=menu1)
         menu1.add_command(label="Select a file", command=self.open_file)
 
-        menu1.add_command(label="Save a file", command=self.save_plot)
+        menu1.add_command(label="Save a file", command=self.save_image)
 
         menu2 = tk.Menu(myMenu)
         myMenu.add_cascade(label="Menu 2", menu=menu2)
