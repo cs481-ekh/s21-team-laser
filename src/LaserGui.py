@@ -30,7 +30,7 @@ class Project(tk.Frame):
         myMenu.add_cascade(label="File", menu=menu1)
         menu1.add_command(label="Select a file", command=self.open_file)
 
-        menu1.add_command(label="Save a file", command=self.save_plot)
+        # menu1.add_command(label="Save a file", command=self.save_image)
 
         menu2 = tk.Menu(myMenu)
         myMenu.add_cascade(label="Menu 2", menu=menu2)
@@ -71,16 +71,18 @@ class Project(tk.Frame):
     def draw_plot(self):
         canvas = FigureCanvasTkAgg(fig, master=root)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        toolbar = NavigationToolbar2Tk(canvas, root)
+        toolbar.update()
         canvas.draw()
         self.update()
 
 
-    def save_image(self):
-        files = [("All files", "*.*" ),
-                ("Python files", "*.py"),
-                ("Text document", "*.txt"),
-                ("Image files", "*.png")]
-        file = asksaveasfile(filetypes = files, defaultextension = '.png')
+    # def save_image(self):
+    #     files = [("All files", "*.*" ),
+    #             ("Python files", "*.py"),
+    #             ("Text document", "*.txt"),
+    #             ("Image files", "*.png")]
+    #     file = asksaveasfile(filetypes = files, defaultextension = '.png')
 
 if __name__ == "__main__":
     root = tk.Tk()
