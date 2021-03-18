@@ -1,7 +1,7 @@
 import rawTAspectrum
 import tkinter as tk
 from tkinter import ttk
-from tkinter import filedialog
+from tkinter import Entry, filedialog, messagebox
 from threading import Thread
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -11,6 +11,7 @@ from matplotlib.figure import Figure
 from tkinter.filedialog import asksaveasfile
 
 import os
+from tkinter.ttk import Button
 
 class Project(tk.Frame):
     def __init__(self,parent):
@@ -20,7 +21,7 @@ class Project(tk.Frame):
         #class variables
         self.tabCount =1
         self.tabPanel = ttk.Notebook(self)
-        self.tabPanel.pack(pady=15)
+        self.tabPanel.pack(fill="both", expand=True)
 
         myMenu = tk.Menu(self)
         parent.config(menu=myMenu)
@@ -40,10 +41,32 @@ class Project(tk.Frame):
 
     def create_tab(self):
         # created new tabs
-        self.tab = tk.Frame(self.tabPanel, width=970, height=680)
-        self.tab.pack(fill="both",expand=1)
+        self.tab = tk.Frame(self.tabPanel)
+        self.tab.pack(fill="both")
         self.tabPanel.add(self.tab,text="Tab" + str(self.tabCount))
         self.tabCount = self.tabCount+1
+
+
+    def create_graph1(self):
+        # created new tabs
+        self.tab = tk.Frame(self.tabPanel)
+        self.tab.columnconfigure(0,weight=0)
+        self.tab.columnconfigure(1,weight=1)
+        self.tab.rowconfigure(0,weight=1)
+        self.tab.pack(fill="both")
+        self.tabPanel.add(self.tab,text="Tab" + str(self.tabCount))
+        self.tabCount = self.tabCount+1
+        self.controlPane = tk.Frame(self.tab)
+        self.controlPane.grid(column=0,row=0)
+        self.entry = Entry(self.controlPane)
+        self.entry.pack()
+        btn_apply = Button(self.controlPane, text="Apply", command=self.apply_button_action)
+        btn_apply.pack()
+        self.graph1 = tk.Frame(self.tab)
+        self.graph1.grid(column=1,row=0,sticky="nsew")
+
+    def apply_button_action(self):
+        print(self.entry.get())    
 
     #opens data file and funs analysis
     def open_file(self):
@@ -63,15 +86,16 @@ class Project(tk.Frame):
         progressBar.pack()
         self.update() 
         rawTAspectrum.load_data_file(self.fileName)
-        fig = rawTAspectrum.load_chart()
+        fig = rawTAspectrum.dummy_chart()
         progressBar.stop()
         progressBar.destroy()
         self.after(0,self.draw_plot)
     
     def draw_plot(self):
-        canvas = FigureCanvasTkAgg(fig, master=root)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        toolbar = NavigationToolbar2Tk(canvas, root)
+        self.create_graph1()
+        canvas = FigureCanvasTkAgg(fig, master=self.graph1)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        toolbar = NavigationToolbar2Tk(canvas, self.graph1)
         toolbar.update()
         canvas.draw()
         self.update()
