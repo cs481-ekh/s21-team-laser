@@ -51,19 +51,34 @@ class Project(tk.Frame):
         # created new tabs
         self.tab = tk.Frame(self.tabPanel)
         self.tab.columnconfigure(0,weight=0)
-        self.tab.columnconfigure(1,weight=1)
-        self.tab.rowconfigure(0,weight=1)
-        self.tab.pack(fill="both")
+        self.tab.columnconfigure(3,weight=1)
+        self.tab.rowconfigure(0,weight=0)
+        #self.tab.pack(fill="both")
         self.tabPanel.add(self.tab,text="Tab" + str(self.tabCount))
-        self.tabCount = self.tabCount+1
-        self.controlPane = tk.Frame(self.tab)
-        self.controlPane.grid(column=0,row=0)
-        self.entry = Entry(self.controlPane)
-        self.entry.pack()
-        btn_apply = Button(self.controlPane, text="Apply", command=self.apply_button_action)
-        btn_apply.pack()
+        #self.tabCount = self.tabCount+1
+        
+        self.label1 = tk.Label(self.tab,text="Wlax1")
+        self.Wlax1 = tk.Entry(self.tab)
+        self.label1.grid(column=0,row=0)
+        self.Wlax1.grid(column=1,row=0)
+
+        self.label2 = tk.Label(self.tab,text="Wlax2")
+        self.Wlax2 = tk.Entry(self.tab)
+        self.label2.grid(column=0,row=1)
+        self.Wlax2.grid(column=1,row=1)
+
+        self.label3 = tk.Label(self.tab,text="Taxcp")
+        self.taxcp = tk.Entry(self.tab)
+        self.label3.grid(column=0,row=2)
+        self.taxcp.grid(column=1,row=2)
+
+        btn_apply = Button(self.tab, text="Apply", command=self.tuncate_data)
+        btn_apply.grid(column=0,row=3)
+
+        btn_remove = Button(self.tab, text="Remove Tab", command=self.remove_tab)
+        btn_remove.grid(column=1,row=3)
         self.graph1 = tk.Frame(self.tab)
-        self.graph1.grid(column=1,row=0,sticky="nsew")
+        self.graph1.grid(column=2,row=0,rowspan=4,sticky="nsew")
 
     def apply_button_action(self):
         print(self.entry.get())    
@@ -99,7 +114,18 @@ class Project(tk.Frame):
         toolbar.update()
         canvas.draw()
         self.update()
-
+        
+    def tuncate_data(self):
+        #get input text
+        wlax1 = self.Wlax1.get()
+        wlax2 = self.Wlax2.get()
+        taxcp = self.taxcp.get()
+        #test for bad input. 
+        try:
+            float(wlax1)
+            print("float value")
+        except:
+            print("Not float")
 
     # def save_image(self):
     #     files = [("All files", "*.*" ),
