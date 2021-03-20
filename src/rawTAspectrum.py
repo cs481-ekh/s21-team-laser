@@ -8,76 +8,83 @@ def load_data_file(fileName):
     global raw_data
     raw_data = np.genfromtxt(fileName)
 
-def dummy_chart():
-    fig = plt.figure(1)
-    Year = [1920,1930,1940,1950,1960,1970,1980,1990,2000,2010]
-    Unemployment_Rate = [9.8,12,8,7.2,6.9,7,6.5,6.2,5.5,6.3]    
-    plt.plot(Year, Unemployment_Rate, figure=fig)
-    plt.title('Unemployment Rate Vs Year')
-    plt.xlabel('Year')
-    plt.ylabel('Unemployment Rate')
-    return fig
+# def dummy_chart():
+#     fig = plt.figure(1)
+#     Year = [1920,1930,1940,1950,1960,1970,1980,1990,2000,2010]
+#     Unemployment_Rate = [9.8,12,8,7.2,6.9,7,6.5,6.2,5.5,6.3]    
+#     plt.plot(Year, Unemployment_Rate, figure=fig)
+#     plt.title('Unemployment Rate Vs Year')
+#     plt.xlabel('Year')
+#     plt.ylabel('Unemployment Rate')
+#     return fig
 
 
-# def load_chart():
-#     ###########   EXTRACT AXES AND ACTUAL DATA   ###########
-#     # this is the format for TA data at BSU and can be hard-coded safely
-#     # the value of -10000 at coordinates (0,0) is simply a registration value and is not needed for anything
-#     wlax = raw_data[1:,0]
-#     tax  = raw_data[0,1:]
-#     data = raw_data[1:,1:]
+def load_raw_data():
+    ###########   EXTRACT AXES AND ACTUAL DATA   ###########
+    # this is the format for TA data at BSU and can be hard-coded safely
+    # the value of -10000 at coordinates (0,0) is simply a registration value and is not needed for anything
+    global data
+    global wlax
+    global tax
+    global maxxer
+    wlax = raw_data[1:,0]
+    tax  = raw_data[0,1:]
+    data = raw_data[1:,1:]
 
-#     ###########   SPEED OF LIGHT (nm/ps)   ###########
-#     # often comes in handy but may or may not use
-#     cc = 299792.5
+    ###########   SPEED OF LIGHT (nm/ps)   ###########
+    # often comes in handy but may or may not use
+    cc = 299792.5
 
-#     ###########   PLOT RAW DATA WITH AXES   ###########   
-#     maxxer = np.max(abs(data))
-#     figure = plt.figure(1)
-#     plt.pcolor(tax, wlax, data, cmap='bwr', vmin=-maxxer, vmax=maxxer, shading='auto')
-#     plt.xlabel('delay time (ps)')
-#     plt.ylabel('detection wavelength (nm)')
-#     plt.title('raw TA spectrum ($\Delta T/T$)')
-#     plt.colorbar()
-#     return figure
+    ###########   PLOT RAW DATA WITH AXES   ###########   
+    maxxer = np.max(abs(data))
+    figure = plt.figure(1)
+    plt.pcolor(tax, wlax, data, cmap='bwr', vmin=-maxxer, vmax=maxxer, shading='auto')
+    plt.xlabel('delay time (ps)')
+    plt.ylabel('detection wavelength (nm)')
+    plt.title('raw TA spectrum ($\Delta T/T$)')
+    plt.colorbar()
+    return figure
+    
     # ###########   PLOT DATA WITHOUT AXES TO IDENTIFY CUT POINTS  ###########
     # # typically the nonresonant response at time zero is quite bright
     # # hence I zoom in the colourscale a bit to see better where to cut
-    # plt.figure(2)
-    # plt.imshow(data, cmap='bwr', vmin=-0.5*maxxer, vmax=0.5*maxxer)
-    # plt.xlabel('delay time (index)')
-    # plt.ylabel('detection wavelength (index)')
-    # plt.title('raw TA spectrum ($\Delta T/T$)')
-    # plt.show()
+def load_data_without_axes():
+    figure = plt.figure(2)
+    plt.imshow(data, cmap='bwr', vmin=-0.5*maxxer, vmax=0.5*maxxer)
+    plt.xlabel('delay time (index)')
+    plt.ylabel('detection wavelength (index)')
+    plt.title('raw TA spectrum ($\Delta T/T$)')
+    return figure
 
-    ###########   TRUNCATE AXES AND DATA USING CUT POINTS   ###########
-    # wlaxcp1 = 550
-    # wlaxcp2 = 1750
-    # taxcp = 300
-    # # I assume we use the time domain data all the way to the end
+def load_truncated_chart(wlax1, wlax2, taxcp):
+    ##########   TRUNCATE AXES AND DATA USING CUT POINTS   ###########
+    wlaxcp1 = wlax1
+    wlaxcp2 = wlax2
+    taxcp = taxcp
+    # I assume we use the time domain data all the way to the end
 
-    # trunc_tax = tax[taxcp:]
-    # trunc_wlax = wlax[wlaxcp1:wlaxcp2]
-    # trunc_data = data[wlaxcp1:wlaxcp2,taxcp:]
-
-
-    # ###########   REMOVE UNDERLYING 'STATIC' SIGNAL   ###########
-    # # The non-oscillatory background signal has an exponential decay.
-    # # However the decay time is very long relative to oscillatory signals.
-    # # Therefore, for simplicity, I simply subtract an averaged background signal.
-    # bkgrd = np.mean(trunc_data[:,-10:],1)  # average of 10 final time points
-    # trunc_data_subtracted = trunc_data - np.transpose(np.tile(bkgrd, (np.size(trunc_tax), 1)))
+    trunc_tax = tax[taxcp:]
+    trunc_wlax = wlax[wlaxcp1:wlaxcp2]
+    trunc_data = data[wlaxcp1:wlaxcp2,taxcp:]
 
 
-    # ###########   PLOT TRUNCATED DATA WITH AXES   ###########
-    # maxxer2 = np.max(abs(trunc_data_subtracted))
-    # plt.figure(3)
-    # plt.pcolor(trunc_tax, trunc_wlax, trunc_data_subtracted, cmap='bwr', vmin=-maxxer2, vmax=maxxer2, shading='auto')
-    # plt.xlabel('delay time (ps)')
-    # plt.ylabel('detection wavelength (nm)')
-    # plt.title('truncated raw TA spectrum with static signals subtracted ($\Delta T/T$)')
-    # plt.colorbar()
-    # plt.show()
+    ###########   REMOVE UNDERLYING 'STATIC' SIGNAL   ###########
+    # The non-oscillatory background signal has an exponential decay.
+    # However the decay time is very long relative to oscillatory signals.
+    # Therefore, for simplicity, I simply subtract an averaged background signal.
+    bkgrd = np.mean(trunc_data[:,-10:],1)  # average of 10 final time points
+    trunc_data_subtracted = trunc_data - np.transpose(np.tile(bkgrd, (np.size(trunc_tax), 1)))
+
+
+    ###########   PLOT TRUNCATED DATA WITH AXES   ###########
+    maxxer2 = np.max(abs(trunc_data_subtracted))
+    figure = plt.figure(3)
+    plt.pcolor(trunc_tax, trunc_wlax, trunc_data_subtracted, cmap='bwr', vmin=-maxxer2, vmax=maxxer2, shading='auto')
+    plt.xlabel('delay time (ps)')
+    plt.ylabel('detection wavelength (nm)')
+    plt.title('truncated raw TA spectrum with static signals subtracted ($\Delta T/T$)')
+    plt.colorbar()
+    return figure
 
 
     # ###########   FOURIER TRANSFORM OVER DELAY-TIME DIMENSION   ###########
