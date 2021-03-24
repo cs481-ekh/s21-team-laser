@@ -31,6 +31,7 @@ class Project(tk.Frame):
         myMenu.add_cascade(label="File", menu=menu1)
         menu1.add_command(label="Select a file", command=self.open_file)
 
+        menu1.add_command(label="Reset", command=self.reset)
         # menu1.add_command(label="Save a file", command=self.save_image)
 
         menu2 = tk.Menu(myMenu)
@@ -141,6 +142,10 @@ class Project(tk.Frame):
         canvas.draw()
         canvas2.draw()
         self.update()
+
+    def reset(self):
+
+        self.tabPanel.destroy()
 
 
     # def save_image(self):
