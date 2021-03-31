@@ -144,8 +144,9 @@ class Project(tk.Frame):
         self.update()
 
     def reset(self):
-
-        self.tabPanel.destroy()
+        self.tabPanel.destroy()                             # clears out the tab panel
+        self.tabPanel = ttk.Notebook(self)                  # resetting the tab panel
+        self.tabPanel.pack(fill="both", expand=True)        
 
 
     # def save_image(self):
