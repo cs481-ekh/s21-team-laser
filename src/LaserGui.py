@@ -90,6 +90,7 @@ class Project(tk.Frame):
     
     def truncate_graph_thread_exec(self):
         self.fig3 = rawTAspectrum.load_truncated_chart(int(self.entry1.get()), int(self.entry2.get()), int(self.entry3.get()))
+        self.fig3.subplots_adjust(left=0.185)
         self.after(0,self.create_truncation_tab)
     
     def create_truncation_tab(self):
@@ -101,7 +102,10 @@ class Project(tk.Frame):
         self.graph3 = tk.Frame(self.truncTab)
         self.graph3.pack()
         canvas = FigureCanvasTkAgg(self.fig3, master=self.graph3)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        toolbar = NavigationToolbar2Tk(canvas, self.graph3)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)        
         canvas.draw()
         self.update()
 
