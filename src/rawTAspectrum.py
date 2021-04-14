@@ -8,27 +8,38 @@ def load_data_file(fileName):
     global raw_data
     raw_data = np.genfromtxt(fileName)
 
-def load_chart():
-    ###########   EXTRACT AXES AND ACTUAL DATA   ###########
-    # this is the format for TA data at BSU and can be hard-coded safely
-    # the value of -10000 at coordinates (0,0) is simply a registration value and is not needed for anything
-    wlax = raw_data[1:,0]
-    tax  = raw_data[0,1:]
-    data = raw_data[1:,1:]
+def dummy_chart():
+    fig = plt.figure(1)
+    Year = [1920,1930,1940,1950,1960,1970,1980,1990,2000,2010]
+    Unemployment_Rate = [9.8,12,8,7.2,6.9,7,6.5,6.2,5.5,6.3]    
+    plt.plot(Year, Unemployment_Rate, figure=fig)
+    plt.title('Unemployment Rate Vs Year')
+    plt.xlabel('Year')
+    plt.ylabel('Unemployment Rate')
+    return fig
 
-    ###########   SPEED OF LIGHT (nm/ps)   ###########
-    # often comes in handy but may or may not use
-    cc = 299792.5
 
-    ###########   PLOT RAW DATA WITH AXES   ###########   
-    maxxer = np.max(abs(data))
-    figure = plt.figure(1)
-    plt.pcolor(tax, wlax, data, cmap='bwr', vmin=-maxxer, vmax=maxxer, shading='auto')
-    plt.xlabel('delay time (ps)')
-    plt.ylabel('detection wavelength (nm)')
-    plt.title('raw TA spectrum ($\Delta T/T$)')
-    plt.colorbar()
-    return figure
+# def load_chart():
+#     ###########   EXTRACT AXES AND ACTUAL DATA   ###########
+#     # this is the format for TA data at BSU and can be hard-coded safely
+#     # the value of -10000 at coordinates (0,0) is simply a registration value and is not needed for anything
+#     wlax = raw_data[1:,0]
+#     tax  = raw_data[0,1:]
+#     data = raw_data[1:,1:]
+
+#     ###########   SPEED OF LIGHT (nm/ps)   ###########
+#     # often comes in handy but may or may not use
+#     cc = 299792.5
+
+#     ###########   PLOT RAW DATA WITH AXES   ###########   
+#     maxxer = np.max(abs(data))
+#     figure = plt.figure(1)
+#     plt.pcolor(tax, wlax, data, cmap='bwr', vmin=-maxxer, vmax=maxxer, shading='auto')
+#     plt.xlabel('delay time (ps)')
+#     plt.ylabel('detection wavelength (nm)')
+#     plt.title('raw TA spectrum ($\Delta T/T$)')
+#     plt.colorbar()
+#     return figure
     # ###########   PLOT DATA WITHOUT AXES TO IDENTIFY CUT POINTS  ###########
     # # typically the nonresonant response at time zero is quite bright
     # # hence I zoom in the colourscale a bit to see better where to cut
