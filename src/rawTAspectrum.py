@@ -58,6 +58,12 @@ def load_data_without_axes():
 
 def load_truncated_chart(wlax1, wlax2, taxcp):
     ##########   TRUNCATE AXES AND DATA USING CUT POINTS   ###########
+    global trunc_data_subtracted
+    global trunc_tax
+    global trunc_wlax
+    global trunc_data
+    global wlaxcp1
+    global wlaxcp2
     wlaxcp1 = wlax1
     wlaxcp2 = wlax2
     taxcp = taxcp
@@ -86,28 +92,30 @@ def load_truncated_chart(wlax1, wlax2, taxcp):
     plt.colorbar()
     return figure
 
+def fourier_transform():
+    global fft_data
+    global maxxerf
+    ###########   FOURIER TRANSFORM OVER DELAY-TIME DIMENSION   ###########
+    # Somehow Python understands that I want to only Fourier transform along 1 dimension
+    # and it knows what dimension I want.
+    # That's confusing and a point of potential errors.
+    fft_data = fft(trunc_data_subtracted)
 
-    # ###########   FOURIER TRANSFORM OVER DELAY-TIME DIMENSION   ###########
-    # # Somehow Python understands that I want to only Fourier transform along 1 dimension
-    # # and it knows what dimension I want.
-    # # That's confusing and a point of potential errors.
-    # fft_data = fft(trunc_data_subtracted)
+    ###########   PLOT SPECTRUM WITHOUT AXES   ###########
+    maxxerf = np.max(abs(fft_data))
+    # Typically there is a spike at zero frequency.
+    # Therefore we often have to adjust the colorscale by a user-defined amount to see anything.
 
-    # ###########   PLOT SPECTRUM WITHOUT AXES   ###########
-    # maxxerf = np.max(abs(fft_data))
-    # # Typically there is a spike at zero frequency.
-    # # Therefore we often have to adjust the colorscale by a user-defined amount to see anything.
-
-    # plt.figure(4)
-    # plt.imshow(abs(fft_data), cmap='Reds', vmin=0, vmax=0.1*maxxerf)
-    # plt.xlabel('oscillation frequency (index)')
-    # plt.ylabel('detection wavelength (index)')
-    # plt.title('amplitude FFT of truncated TA spectrum')
-    # bounder1 = round(np.size(trunc_tax)/2)
-    # plt.xlim(0, bounder1)
-    # plt.colorbar()
-    # # plt.xlim(200, 230)
-    # plt.show()
+    figure = plt.figure(4)
+    plt.imshow(abs(fft_data), cmap='Reds', vmin=0, vmax=0.1*maxxerf)
+    plt.xlabel('oscillation frequency (index)')
+    plt.ylabel('detection wavelength (index)')
+    plt.title('amplitude FFT of truncated TA spectrum')
+    bounder1 = round(np.size(trunc_tax)/2)
+    plt.xlim(0, bounder1)
+    plt.colorbar()
+    plt.xlim(200, 230)
+    return figure
 
     # # One confusing thing is that FFTs produce a duplicate set of symmetric data.
     # # The only useful data is the first half.
@@ -115,54 +123,55 @@ def load_truncated_chart(wlax1, wlax2, taxcp):
     # # Therefore typically I just retain everything and zoom in the axis using axis limits.
 
 
-
-    # # ###########   CREATE OSCILLATION FREQUENCY AXIS   ###########
-    # # dt = np.mean(np.diff(trunc_tax))  # find the mean of the difference between time points
-    # # df = 1/(dt*trunc_tax.size) # calculate here the frequency spacing
-    # # ftax = df*np.arange(trunc_tax.size) # actually create the frequency axis here
-
-
-    # # ###########   SUM THE ABSOLUTE VALUE OF THE SPECTRUM TO CREATE 1D PLOT   ###########
-    # # spec_sum = abs(np.sum(fft_data, axis=0))
-
-    # # ###########   PLOT 1D SPECTRUM WITH AXES   ###########
-    # # plt.figure(5)
-    # # # plt.plot(spec_sum)
-    # # plt.plot(ftax, spec_sum)
-    # # plt.xlabel('oscillation frequency (THz)')
-    # # plt.title('total vibronic spectrum')
-    # # plt.xlim(0, 100)
-    # # # plt.xlim(0, 40)  # I used these bounds to zoom in on one peak
-    # # # Due to the physics, we should be safe to hard-code the bounds to 0 and 100 THz
-    # # plt.ylim(0, 500)
-    # # plt.show()
+def oscillation_freq_axis():
+    global ftax
+    ###########   CREATE OSCILLATION FREQUENCY AXIS   ###########
+    dt = np.mean(np.diff(trunc_tax))  # find the mean of the difference between time points
+    df = 1/(dt*trunc_tax.size) # calculate here the frequency spacing
+    ftax = df*np.arange(trunc_tax.size) # actually create the frequency axis here
 
 
-    # # ###########   FCS PLOT FOR A SPECIFIED FREQUENCY   ###########
-    # # freqoi = 16 # index of the frequency of interest
-    # # # I found this index value by patiently adjusting bounds of figure 5,
-    # # # but we will want a GUI method of zooming in and selecting which frequency to view
-    # # freqoi_freq = 0.01*round(100*ftax[freqoi]) # the frequency value of this index
-    # # fcs_ext = fft_data[:,freqoi] # extract data of this oscillation frequency
-    # # fcs_amp = abs(fcs_ext)/np.max(abs(fcs_ext)) # normalized amplitude profile
-    # # fcs_phs = np.unwrap(np.angle(fcs_ext))/np.pi # unwrapped phase profile in units of pi radians
+    ###########   SUM THE ABSOLUTE VALUE OF THE SPECTRUM TO CREATE 1D PLOT   ###########
+    spec_sum = abs(np.sum(fft_data, axis=0))
 
-    # # # plotting the amplitude and phase profiles with a shared horizontal axis
-    # # fig6, ax0 = plt.subplots()
-    # # ax0.plot(trunc_wlax, fcs_amp, c='k', linewidth=3.0)
-    # # ax0.set_ylim(0, 1.1)
-    # # ax0.set_yticks([0, 1])
-    # # plt.xlabel('detection wavelength (nm)')
-    # # ax0.set_xlim(500, 750) # fairly safe to hard-code these limits
-    # # ax0.set_ylabel('amplitude (arb. unit)')
+    ###########   PLOT 1D SPECTRUM WITH AXES   ###########
+    figure = plt.figure(5)
+    # plt.plot(spec_sum)
+    plt.plot(ftax, spec_sum)
+    plt.xlabel('oscillation frequency (THz)')
+    plt.title('total vibronic spectrum')
+    plt.xlim(0, 100)
+    # plt.xlim(0, 40)  # I used these bounds to zoom in on one peak
+    # Due to the physics, we should be safe to hard-code the bounds to 0 and 100 THz
+    plt.ylim(0, 500)
+    return figure
 
-    # # ax1 = ax0.twinx()  # instantiate a second axes that shares the same x-axis
-    # # ax1.plot(trunc_wlax, fcs_phs - min(fcs_phs), c='r', linewidth=3.0)
-    # # ax1.set_ylabel('phase (radians/$\pi$)')
-    # # plt.title('FCS of ' + str(freqoi_freq) + ' THz')
-    # # fig6.tight_layout()  # otherwise the right y-label is slightly clipped
-    # # plt.show()
-    # # # fig6.savefig('example.pdf', format='pdf')
+def frequency_graph(freq):
+    ###########   FCS PLOT FOR A SPECIFIED FREQUENCY   #########
+    freqoi = freq # index of the frequency of interest
+    # I found this index value by patiently adjusting bounds of figure 5,
+    # but we will want a GUI method of zooming in and selecting which frequency to view
+    freqoi_freq = 0.01*round(100*ftax[freqoi]) # the frequency value of this index
+    fcs_ext = fft_data[:,freqoi] # extract data of this oscillation frequency
+    fcs_amp = abs(fcs_ext)/np.max(abs(fcs_ext)) # normalized amplitude profile
+    fcs_phs = np.unwrap(np.angle(fcs_ext))/np.pi # unwrapped phase profile in units of pi radians
 
-    # # # We will need a way to save the Fourier data (trunc_wlax, fcs_amp, fcs_phs) to an ascii file so that
-    # # # non-expert users could import and adjust in something terrible like Microsoft Excel.
+    # plotting the amplitude and phase profiles with a shared horizontal axis
+    fig6, ax0 = plt.subplots()
+    ax0.plot(trunc_wlax, fcs_amp, c='k', linewidth=3.0)
+    ax0.set_ylim(0, 1.1)
+    ax0.set_yticks([0, 1])
+    plt.xlabel('detection wavelength (nm)')
+    ax0.set_xlim(500, 750) # fairly safe to hard-code these limits
+    ax0.set_ylabel('amplitude (arb. unit)')
+
+    ax1 = ax0.twinx()  # instantiate a second axes that shares the same x-axis
+    ax1.plot(trunc_wlax, fcs_phs - min(fcs_phs), c='r', linewidth=3.0)
+    ax1.set_ylabel('phase (radians/$\pi$)')
+    plt.title('FCS of ' + str(freqoi_freq) + ' THz')
+    fig6.tight_layout()  # otherwise the right y-label is slightly clipped
+    return fig6
+    # fig6.savefig('example.pdf', format='pdf')
+
+    # We will need a way to save the Fourier data (trunc_wlax, fcs_amp, fcs_phs) to an ascii file so that
+    # non-expert users could import and adjust in something terrible like Microsoft Excel.

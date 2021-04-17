@@ -89,17 +89,58 @@ class Project(tk.Frame):
     
     def truncate_graph_thread_exec(self):
         self.fig3 = rawTAspectrum.load_truncated_chart(int(self.entry1.get()), int(self.entry2.get()), int(self.entry3.get()))
+        self.fig4 = rawTAspectrum.fourier_transform()
+        self.fig5 = rawTAspectrum.oscillation_freq_axis()
         self.after(0,self.create_truncation_tab)
     
     def create_truncation_tab(self):
         self.update()
         self.truncTab = tk.Frame(self.tabPanel)
-        self.truncTab.pack(fill="both")
+        self.truncTab.columnconfigure(0,weight=1)
+        self.truncTab.columnconfigure(1,weight=1)
+        self.truncTab.rowconfigure(0,weight=1)
+        self.truncTab.rowconfigure(1,weight=1)
         self.tabPanel.add(self.truncTab,text="Tab" + str(self.tabCount))
         self.tabCount = self.tabCount+1
         self.graph3 = tk.Frame(self.truncTab)
-        self.graph3.pack()
+        self.graph3.grid(column=0,row=0,sticky="nsew")
+        self.graph4 = tk.Frame(self.truncTab)
+        self.graph4.grid(column=1,row=0,sticky="nsew")
+        self.graph5 = tk.Frame(self.truncTab)
+        self.graph5.grid(column=0,row=1,sticky="nsew")
+        self.freqPane = tk.Frame(self.truncTab)
+        self.freqPane.grid(column=1,row=1,sticky="nsew")
+        self.frequencySlider = tk.Scale(self.freqPane, from_=1,to=20, orient=tk.HORIZONTAL, label="frequency")
+        self.frequencySlider.pack()
+        btn_apply = Button(self.freqPane, text="truncate", command=self.start_freq_graph)
+        btn_apply.pack()
         canvas = FigureCanvasTkAgg(self.fig3, master=self.graph3)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        canvas.draw()
+        canvas = FigureCanvasTkAgg(self.fig4, master=self.graph4)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        canvas.draw()
+        canvas = FigureCanvasTkAgg(self.fig5, master=self.graph5)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        canvas.draw()
+        self.update()
+
+    def start_freq_graph(self):
+        controlThread = Thread(target=self.generate_freq_graph, daemon = True)
+        controlThread.start()
+
+    def generate_freq_graph(self):
+        self.fig6 = rawTAspectrum.frequency_graph(16)
+        self.after(0,self.create_freq_tab)
+    
+    def create_freq_tab(self):
+        self.update()
+        self.freqTab = tk.Frame(self.tabPanel)
+        self.tabPanel.add(self.freqTab,text="Tab" + str(self.tabCount))
+        self.tabCount = self.tabCount+1
+        self.graph6 = tk.Frame(self.freqTab)
+        self.graph6.pack()
+        canvas = FigureCanvasTkAgg(self.fig6, master=self.graph6)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         canvas.draw()
         self.update()
