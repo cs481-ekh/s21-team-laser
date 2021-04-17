@@ -130,7 +130,8 @@ class Project(tk.Frame):
         controlThread.start()
 
     def generate_freq_graph(self):
-        self.fig6 = rawTAspectrum.frequency_graph(16)
+        self.fig6 = rawTAspectrum.frequency_graph(self.frequencySlider.get())
+        print(self.frequencySlider.get())
         self.after(0,self.create_freq_tab)
     
     def create_freq_tab(self):
