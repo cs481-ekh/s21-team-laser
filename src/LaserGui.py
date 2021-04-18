@@ -30,7 +30,7 @@ class Project(tk.Frame):
         menu1 = tk.Menu(myMenu)
         myMenu.add_cascade(label="Start", menu=menu1)
         menu1.add_command(label="Select a file", command=self.open_file)
-
+        menu1.add_command(label="Reset", command=self.reset)
         # menu1.add_command(label="Save a file", command=self.save_image)
 
         # menu2 = tk.Menu(myMenu)
@@ -191,6 +191,12 @@ class Project(tk.Frame):
         canvas2.draw()
         self.update()
 
+    def reset(self):
+    
+        self.tabPanel.destroy()
+        self.tabPanel.destroy()                             # clears out the tab panel
+        self.tabPanel = ttk.Notebook(self)                  # resetting the tab panel
+        self.tabPanel.pack(fill="both", expand=True) 
 
     # def save_image(self):
     #     files = [("All files", "*.*" ),
