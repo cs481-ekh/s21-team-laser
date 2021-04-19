@@ -192,7 +192,7 @@ class Project(tk.Frame):
         self.update()
 
     def reset(self):
-    
+        self.tabCount = 1
         self.tabPanel.destroy()
         self.tabPanel.destroy()                             # clears out the tab panel
         self.tabPanel = ttk.Notebook(self)                  # resetting the tab panel
