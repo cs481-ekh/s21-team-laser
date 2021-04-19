@@ -37,8 +37,8 @@ def load_raw_data():
 
     ###########   PLOT RAW DATA WITH AXES   ###########   
     maxxer = np.max(abs(data))
-    figure = plt.figure(1)
     plt.switch_backend('agg') 
+    figure = plt.figure(1)
     plt.pcolor(tax, wlax, data, cmap='bwr', vmin=-maxxer, vmax=maxxer, shading='auto')
     plt.xlabel('delay time (ps)')
     plt.ylabel('detection wavelength (nm)')
