@@ -30,7 +30,7 @@ class Project(tk.Frame):
         menu1 = tk.Menu(myMenu)
         myMenu.add_cascade(label="Start", menu=menu1)
         menu1.add_command(label="Select a file", command=self.open_file)
-
+        menu1.add_command(label="Reset", command=self.reset)
         # menu1.add_command(label="Save a file", command=self.save_image)
 
         # menu2 = tk.Menu(myMenu)
@@ -115,12 +115,17 @@ class Project(tk.Frame):
         btn_apply = Button(self.freqPane, text="truncate", command=self.start_freq_graph)
         btn_apply.pack()
         canvas = FigureCanvasTkAgg(self.fig3, master=self.graph3)
+        toolbar = NavigationToolbar2Tk(canvas, self.graph3)
+        toolbar.update()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        canvas.draw()
         canvas = FigureCanvasTkAgg(self.fig4, master=self.graph4)
+        toolbar = NavigationToolbar2Tk(canvas, self.graph4)
+        toolbar.update()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         canvas.draw()
         canvas = FigureCanvasTkAgg(self.fig5, master=self.graph5)
+        toolbar = NavigationToolbar2Tk(canvas, self.graph5)
+        toolbar.update()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         canvas.draw()
         self.update()
@@ -142,6 +147,8 @@ class Project(tk.Frame):
         self.graph6 = tk.Frame(self.freqTab)
         self.graph6.pack()
         canvas = FigureCanvasTkAgg(self.fig6, master=self.graph6)
+        toolbar = NavigationToolbar2Tk(canvas, self.graph6)
+        toolbar.update()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         canvas.draw()
         self.update()
@@ -184,6 +191,12 @@ class Project(tk.Frame):
         canvas2.draw()
         self.update()
 
+    def reset(self):
+        self.tabCount = 1
+        self.tabPanel.destroy()
+        self.tabPanel.destroy()                             # clears out the tab panel
+        self.tabPanel = ttk.Notebook(self)                  # resetting the tab panel
+        self.tabPanel.pack(fill="both", expand=True) 
 
     # def save_image(self):
     #     files = [("All files", "*.*" ),
